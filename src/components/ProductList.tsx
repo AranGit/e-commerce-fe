@@ -1,31 +1,65 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 "use client"
-import { useState, useEffect, useContext } from "react";
-import { GetAllProducts, Products, Product } from "@/utils/apiUtils"
+import { useState, useEffect } from "react";
+import { GetAllProducts, Products, Product, GetAllCategories } from "@/utils/apiUtils"
 import ProductCard from "@/components/ProductCard";
 import Loading from "@/components/Loading";
-import { AuthContext } from "@/contexts/userContext";
 import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
 function ProductList() {
-  const userContextData = useContext(AuthContext);
-
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [allProducts, setProducts] = useState<Products | null>(null);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [selectedCategories, onSelectCategory] = useState<string[]>([]);
+
   const handleSetProducts = (products: Products | null) => {
     setIsLoading(false);
     setProducts(products);
   }
+  const handleSetCategories = (data: string[]) => {
+    setCategories(data);
+    GetAllProducts({ setProducts: handleSetProducts });
+  }
+
   useEffect(() => {
     setIsLoading(true);
-    GetAllProducts({ setProducts: handleSetProducts });
+    GetAllCategories({ setData: handleSetCategories });
   }, []);
+
+  const handleChange = (event: any, value: string[]) => {
+    onSelectCategory(value);
+  };
+
+  const filteredProducts = allProducts?.products.filter((product: Product) => {
+    console.log(product.category + " : " + selectedCategories.includes(product.category));
+    return selectedCategories.length > 0 ? selectedCategories.includes(product.category) : true;
+  });
 
   return (
     <>
       {isLoading ? <Loading /> :
         <Grid container spacing={2}>
-          {allProducts?.products.map((product: Product) =>
+          <Grid item xs={12}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Autocomplete
+                  fullWidth
+                  multiple
+                  id="combo-box-demo"
+                  options={categories}
+                  onChange={handleChange}
+                  renderInput={(params) => <TextField {...params} label="Select Catergory" />}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            {filteredProducts?.length + " Items"}
+          </Grid>
+          {filteredProducts?.map((product: Product) =>
             <Grid item xs={12} sm={6} md={4} lg={3} key={`product-${product.id}`}>
               <ProductCard product={product} />
             </Grid>)
