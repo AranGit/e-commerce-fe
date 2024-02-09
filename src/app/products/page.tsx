@@ -1,13 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
 "use client"
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { GetAllProducts, Products, Product } from "@/utils/apiUtils"
 import ProductCard from "@/components/ProductCard";
 import Loading from "@/components/Loading";
+import { AuthContext } from "@/contexts/userContext";
 import Grid from '@mui/material/Grid';
 
 
 export default function ProductsPage() {
+  const userContextData = useContext(AuthContext);
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [allProducts, setProducts] = useState<Products | null>(null);
   const handleSetProducts = (products: Products | null) => {
@@ -21,7 +24,7 @@ export default function ProductsPage() {
 
   return (
     <div>
-      <h1 className="mb-[8px]">Products</h1>
+      <h1 className="mb-[8px]">Products {userContextData?.user?.firstName}</h1>
       {isLoading ? <Loading /> :
         <Grid container spacing={2}>
           {allProducts?.products.map((product: Product) =>
