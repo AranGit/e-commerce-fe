@@ -17,10 +17,14 @@ export default function PageLayout({
   const pathname = usePathname()
   const [user, setUser] = useState<User | null>(null);
 
-  useEffect(() => {
+  const userContextData: UserContextData = {
+    user: user,
+    clearUser: () => setUser(null)
+  }
+
+  const handleUser = () => {
     const token = getItemFromLocal(tokenKey);
     if (token) {
-      if (pathname === "/login") router.push(`/`)
       getUser({
         token: token,
         onSuccess: (user: User) => {
@@ -28,16 +32,21 @@ export default function PageLayout({
           router.push(`/products`)
         },
         onFailed: () => router.push(`/login`)
-      })
+      });
     } else {
       setUser(null);
     }
+  }
+
+  useEffect(() => {
+    handleUser();
   }, [])
 
-  const userContextData: UserContextData = {
-    user: user,
-    clearUser: () => setUser(null)
-  }
+  useEffect(() => {
+    if (userContextData?.user === null) {
+      handleUser();
+    }
+  }, [pathname])
 
   return (
     <AuthProvider userContextData={userContextData}>

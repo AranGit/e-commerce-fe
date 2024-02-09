@@ -10,6 +10,7 @@ import Box from '@mui/material/Box';
 
 // state
 interface State {
+  loading: boolean,
   username: string;
   password: string;
   errorResponse: ErrorResponse | null;
@@ -17,19 +18,22 @@ interface State {
 
 // action
 type Action =
+  | { type: 'LOADING' }
   | { type: 'SET_USERNAME', data: string }
   | { type: 'SET_PASSWORD', data: string }
-  | { type: 'SET_USER', data: ErrorResponse | null };
+  | { type: 'SET_ERROR', data: ErrorResponse | null };
 
 // reducer
 function reducer(state: State, action: Action): State {
   switch (action.type) {
+    case 'LOADING':
+      return { ...state, loading: true };
     case 'SET_USERNAME':
       return { ...state, username: action.data };
     case 'SET_PASSWORD':
       return { ...state, password: action.data };
-    case 'SET_USER':
-      return { ...state, errorResponse: action.data };
+    case 'SET_ERROR':
+      return { ...state, errorResponse: action.data, loading: false };
     default:
       return state;
   }
@@ -39,6 +43,7 @@ function LoginCard() {
   const router = useRouter();
   const [state, dispatch] = useReducer(reducer,
     {
+      loading: false,
       username: "",
       password: "",
       errorResponse: null
@@ -53,12 +58,13 @@ function LoginCard() {
   };
 
   const login = () => {
+    dispatch({ type: 'LOADING' });
     Login(
       {
         username: state.username,
         password: state.password,
-        onSuccess: () => router.push(`/`),
-        onFailed: (data: ErrorResponse | null) => dispatch({ type: 'SET_USER', data: data })
+        onSuccess: () => router.push(`/products`),
+        onFailed: (data: ErrorResponse | null) => dispatch({ type: 'SET_ERROR', data: data })
       })
   };
 
@@ -85,6 +91,7 @@ function LoginCard() {
                 variant="outlined"
                 fullWidth
                 required
+                disabled={state.loading}
                 onChange={e => handleChangeUsername(e.target.value)}
               />
             </Grid>
@@ -98,11 +105,12 @@ function LoginCard() {
                 variant="outlined"
                 fullWidth
                 required
+                disabled={state.loading}
                 onChange={e => handleChangePassword(e.target.value)}
               />
             </Grid>
             <Grid item xs={12} >
-              <Button type='submit' variant="contained" fullWidth={true}>LOG IN</Button>
+              <Button type='submit' variant="contained" fullWidth={true} disabled={state.loading}>LOG IN</Button>
             </Grid>
           </Grid>
         </Box>
