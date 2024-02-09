@@ -17,6 +17,8 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { useRouter } from 'next/navigation';
 
+const shopName = 'Phop Dummy Shop'
+
 interface Props {
   window?: () => Window;
 }
@@ -49,7 +51,7 @@ function NavBar(props: Props) {
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
       <Typography variant="h6" sx={{ my: 2 }}>
-        SHOP
+        {shopName}
       </Typography>
       <Divider />
       <List>
@@ -76,7 +78,7 @@ function NavBar(props: Props) {
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <AppBar component="nav">
-        <Toolbar>
+        <Toolbar className='w-full max-w-[1400px] mx-[auto]'>
           <IconButton
             className='left-[95%]'
             color="inherit"
@@ -92,7 +94,7 @@ function NavBar(props: Props) {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
           >
-            SHOP
+            {shopName}
           </Typography>
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
             {

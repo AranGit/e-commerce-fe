@@ -32,6 +32,10 @@ h5 {
   background-color: #efefef;
 }
 
+nav.MuiAppBar-root {
+  background-color: #EE4D2E;
+}
+
 .MuiCardMedia-root {
   background-size: contain !important;
 }

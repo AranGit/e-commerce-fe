@@ -45,7 +45,7 @@ export default function PageLayout({
         <NavBar />
       </header>
       <main className="flex flex-col items-center justify-between p-5 mt-[80px]">
-        {children}
+        <div className="max-w-[1400px]">{children}</div>
       </main>
       <footer></footer>
     </AuthProvider>
