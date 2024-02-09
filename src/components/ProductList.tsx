@@ -34,7 +34,6 @@ function ProductList() {
   };
 
   const filteredProducts = allProducts?.products.filter((product: Product) => {
-    console.log(product.category + " : " + selectedCategories.includes(product.category));
     return selectedCategories.length > 0 ? selectedCategories.includes(product.category) : true;
   });
 

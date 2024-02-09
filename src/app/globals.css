@@ -77,3 +77,7 @@ nav.MuiAppBar-root {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.carousel.carousel-slider {
+  max-height: 400px;
+}
