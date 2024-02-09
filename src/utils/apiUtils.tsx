@@ -27,6 +27,8 @@ export interface Product {
   price: number;
   images: string[];
   description: string;
+  discountPercentage: number;
+  thumbnail: string;
 }
 
 export interface Products {
@@ -48,7 +50,9 @@ function mapToProduct(json: any): Product {
     title: json.title,
     price: json.price,
     images: json.images,
-    description: json.description
+    description: json.description,
+    discountPercentage: json.discountPercentage,
+    thumbnail: json.thumbnail,
   };
 }
 
