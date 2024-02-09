@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 
-import AuthProvider, { userContextData } from "@/contexts/userContext";
+import AuthProvider, { UserContextData } from "@/contexts/userContext";
 import React, { useState, useEffect } from "react"
 import { useRouter, usePathname } from 'next/navigation';
 import { tokenKey, getItemFromLocal } from "@/utils/utils"
@@ -34,7 +34,7 @@ export default function PageLayout({
     }
   }, [])
 
-  const userContextData: userContextData = {
+  const userContextData: UserContextData = {
     user: user,
     clearUser: () => setUser(null)
   }
