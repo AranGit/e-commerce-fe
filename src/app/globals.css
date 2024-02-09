@@ -24,7 +24,8 @@ h5 {
 
 .card {
   box-sizing: border-box;
-  box-shadow: 0 3px 10px 0 rgba(0,0,0,.14);
+  box-shadow: 0 3px 10px 0 rgba(0, 0, 0, .14);
+  border-radius: 4px;
 }
 
 .product-card:hover .product-card-content {
@@ -41,6 +42,12 @@ h5 {
 
 .MuiButton-contained:hover {
   background-color: #f05d40;
+}
+
+.MuiFormControl-fullWidth {
+  width: 100% !important;
+  margin-left: 0px !important;
+  margin-right: 0px !important;
 }
 
 .ellipse-text {
