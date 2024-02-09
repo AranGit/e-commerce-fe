@@ -6,6 +6,7 @@ const loginUrl = `${baseUrl}auth/login`;
 const getUserUrl = `${baseUrl}auth/me`;
 //Product
 const getAllProductsUrl = `${baseUrl}products`;
+const getAllCatgoriesUrl = `${getAllProductsUrl}/categories`;
 const getProductByIdUrl = (productID: string) => `${baseUrl}products/${productID}`;
 
 export interface ErrorResponse {
@@ -27,6 +28,9 @@ export interface Product {
   price: number;
   images: string[];
   description: string;
+  discountPercentage: number;
+  thumbnail: string;
+  category: string,
 }
 
 export interface Products {
@@ -48,7 +52,10 @@ function mapToProduct(json: any): Product {
     title: json.title,
     price: json.price,
     images: json.images,
-    description: json.description
+    description: json.description,
+    discountPercentage: json.discountPercentage,
+    thumbnail: json.thumbnail,
+    category: json.category
   };
 }
 
@@ -74,7 +81,7 @@ function mapToUser(json: any): User {
 }
 
 export const GetAllProducts = async ({ setProducts }: { setProducts: any }) => {
-  const response = await fetch(getAllProductsUrl);
+  const response = await fetch(getAllProductsUrl + "?limit=0");
   const jsonData = await response.json();
   setProducts(mapToProducts(jsonData));
 };
@@ -83,6 +90,12 @@ export const GetProductByID = async ({ productID, setProduct }: { productID: str
   const response = await fetch(getProductByIdUrl(productID));
   const jsonData = await response.json();
   setProduct(mapToProduct(jsonData));
+};
+
+export const GetAllCategories = async ({ setData }: { setData: any }) => {
+  const response = await fetch(getAllCatgoriesUrl);
+  const jsonData = await response.json();
+  setData(jsonData);
 };
 
 export const Login = async (

@@ -28,6 +28,16 @@ h5 {
   border-radius: 4px;
 }
 
+.product-discount {
+  position: absolute;
+  right: 0px;
+  padding: 3px 5px;
+  width: auto;
+  background: #FFE97A;
+  color: #EE4D2E;
+  border-top-right-radius: 4px;
+}
+
 .product-card:hover .product-card-content {
   background-color: #efefef;
 }

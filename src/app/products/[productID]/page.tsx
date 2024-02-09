@@ -4,7 +4,7 @@ import { GetProductByID, Product } from "@/utils/apiUtils"
 import Loading from "@/components/Loading";
 import ProductCard from "@/components/ProductCard";
 
-export default function ProductByIDPagePage({ params }: { params: any }) {
+export default function ProductByIDPagePage({ params }: { params: { productID: string } }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [product, setProduct] = useState<Product | null>(null);
 
