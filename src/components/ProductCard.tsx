@@ -24,7 +24,10 @@ function ProductCard({ product }: { product: Product }) {
       <CardContent className="product-card-content">
         <h5 className="ellipse-text">{product.title}</h5>
         <p className="ellipse-2-lines">{product.description}</p>
-        <p className="text-[#EE4D2E] mt-3">฿{product.price}</p>
+        <p>
+          <s>฿{product.price}</s>
+          <span className="text-[#EE4D2E] mt-3 ml-2">฿{(product.price - (product.price * product.discountPercentage / 100)).toFixed(0)}</span>
+        </p>
       </CardContent>
     </Card>
   )
