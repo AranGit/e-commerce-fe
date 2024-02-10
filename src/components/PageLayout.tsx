@@ -50,6 +50,10 @@ export default function PageLayout({
   useEffect(() => {
     if (userContextData?.user === null) {
       handleUser();
+    } else {
+      if (pathname === "/") {
+        router.push(`/products`)
+      }
     }
   }, [pathname])
 
