@@ -15,7 +15,7 @@ export default function ProductByIDPagePage({ params }: { params: { productID: s
   }
   useEffect(() => {
     GetProductByID({ productID: params.productID, setProduct: handleSetProducts });
-  }, []);
+  }, [params]);
 
   return (
     <div>

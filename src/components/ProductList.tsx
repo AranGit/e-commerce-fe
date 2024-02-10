@@ -10,7 +10,7 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
 function ProductList() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [allProducts, setProducts] = useState<Products | null>(null);
   const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategories, onSelectCategory] = useState<string[]>([]);
@@ -25,7 +25,6 @@ function ProductList() {
   }
 
   useEffect(() => {
-    setIsLoading(true);
     GetAllCategories({ setData: handleSetCategories });
   }, []);
 
