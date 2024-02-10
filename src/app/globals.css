@@ -69,6 +69,11 @@ nav.MuiAppBar-root {
   margin-right: 0px !important;
 }
 
+.MuiBadge-colorPrimary {
+  background-color: white !important;
+  color: #EE4D2E;
+}
+
 .ellipse-text {
   white-space: nowrap;
   overflow: hidden;

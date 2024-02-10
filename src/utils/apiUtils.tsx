@@ -8,6 +8,9 @@ const getUserUrl = `${baseUrl}auth/me`;
 const getAllProductsUrl = `${baseUrl}products`;
 const getAllCatgoriesUrl = `${getAllProductsUrl}/categories`;
 const getProductByIdUrl = (productID: string) => `${baseUrl}products/${productID}`;
+//Cart
+const getCartsOfUserUrl = (userId: string) => `${baseUrl}/carts/user/${userId}`;
+const addANewCartUrl = `${baseUrl}/carts/add`;
 
 export interface ErrorResponse {
   message: string;
@@ -32,6 +35,11 @@ export interface Product {
   thumbnail: string;
   category: string,
   stock: number
+}
+
+export interface ProductToCart {
+  id: number;
+  quantity: number;
 }
 
 export interface Products {
@@ -142,6 +150,48 @@ export const getUser = async (
   if (response.ok) {
     const jsonData = await response.json();
     onSuccess(mapToUser(jsonData));
+  } else {
+    const jsonData = await response.json();
+    onFailed(mapToError(jsonData));
+  }
+};
+
+export const GetCartsOfUser = async (
+  { userId, onSuccess, onFailed }:
+    {
+      userId: number,
+      onSuccess: any,
+      onFailed: any
+    }) => {
+  const response = await fetch(getCartsOfUserUrl(userId.toString()));
+  if (response.ok) {
+    const jsonData = await response.json();
+    onSuccess();
+  } else {
+    const jsonData = await response.json();
+    onFailed(mapToError(jsonData));
+  }
+};
+
+export const AddProductsToCart = async (
+  { productsToCart, userId, onSuccess, onFailed }:
+    {
+      productsToCart: ProductToCart[],
+      userId: number,
+      onSuccess: any,
+      onFailed: any
+    }) => {
+  const response = await fetch(addANewCartUrl,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId: userId,
+        products: productsToCart
+      })
+    });
+  if (response.ok) {
+    onSuccess();
   } else {
     const jsonData = await response.json();
     onFailed(mapToError(jsonData));

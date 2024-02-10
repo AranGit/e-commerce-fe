@@ -3,7 +3,9 @@
 "use client"
 import { Product } from '@/utils/apiUtils'
 import React from 'react'
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useRouter } from 'next/navigation';
+import { AuthContext } from "@/contexts/userContext";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
 import Grid from '@mui/material/Grid';
@@ -12,11 +14,23 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import TextField from '@mui/material/TextField';
 
 function IndividualProduct({ product }: { product: Product }) {
+  const router = useRouter();
+  const userContextData = React.useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [quantity, setQuantity] = useState<number>(product.stock > 0 ? 1 : 0);
 
   const handleQuantity = (value: number) => {
     const newQuantity = quantity + value
     setQuantity(newQuantity < 0 ? 0 : newQuantity >= product.stock ? product.stock : newQuantity);
+  }
+
+  const handleAddToCart = () => {
+    if (userContextData?.user) {
+      //Call Add To User Cart
+      setIsLoading(true);
+    } else {
+      router.push('/login');
+    }
   }
 
   return (
@@ -59,7 +73,15 @@ function IndividualProduct({ product }: { product: Product }) {
               {product.stock} pieces available
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <Button className='secondary-button' variant="contained" fullWidth>Add To Cart</Button>
+              <Button
+                disabled={quantity <= 0}
+                className='secondary-button'
+                variant="contained"
+                fullWidth
+                onClick={handleAddToCart}
+              >
+                Add To Cart
+              </Button>
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <Button variant="contained" fullWidth>By Now</Button>
