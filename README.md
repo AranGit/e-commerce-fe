@@ -2,6 +2,12 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+```bash
+npm install
+# or
+npm i
+```
+
 First, run the development server:
 
 ```bash
@@ -9,10 +15,14 @@ npm run dev
 # or
 yarn dev
 # or
-pnpm dev
+npm dev
 # or
 bun dev
 ```
+
+E-Commerce website for testing NextJS with [https://dummyjson.com/ ](https://dummyjson.com/)
+
+You can use Get all users API from [the dummyjson](https://dummyjson.com/docs/users) to get some accounts for testing
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
