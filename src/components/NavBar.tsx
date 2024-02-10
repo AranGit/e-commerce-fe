@@ -11,6 +11,8 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -19,6 +21,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import Badge from '@mui/material/Badge';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { Carts, GetCartsOfUser } from '@/utils/apiUtils';
+import Logout from '@mui/icons-material/Logout';
 
 const shopName = 'Aran (Dummy Shop)'
 
@@ -35,6 +38,15 @@ function NavBar(props: Props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [userCarts, setUserCarts] = React.useState<Carts | null>(null);
   const userContextData = React.useContext(AuthContext);
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   React.useEffect(() => {
     if (userContextData?.user) {
@@ -127,11 +139,41 @@ function NavBar(props: Props) {
                       </IconButton>
                       : null
                   }
-                  <Button sx={{ color: '#fff' }} onClick={() => {
-                    onLogout();
-                  }}>
-                    Log Out
+                  <Button
+                    sx={{ color: '#fff' }}
+                    id="basic-button"
+                    aria-controls={open ? 'basic-menu' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? 'true' : undefined}
+                    onClick={handleClick}
+                  >
+                    {userContextData?.user.firstName}
                   </Button>
+                  <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    MenuListProps={{
+                      'aria-labelledby': 'basic-button',
+                    }}
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'right',
+                    }}
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                  >
+                    <MenuItem
+                      onClick={() => {
+                        handleClose();
+                        onLogout();
+                      }}>
+                      <Logout className='mr-4' fontSize="small" />Logout
+                    </MenuItem>
+                  </Menu>
                 </>
                 :
                 <Button sx={{ color: '#fff' }} onClick={() => router.push("/login")}>
