@@ -30,7 +30,7 @@ export default function PageLayout({
           token: token,
           onSuccess: (user: User) => {
             setUser(user);
-            if (pathname === '/login') {
+            if (pathname === '/login' || pathname === "/" || pathname === "") {
               router.push(`/products`)
             }
           },
@@ -39,7 +39,6 @@ export default function PageLayout({
       }
     } else {
       setUser(null);
-      router.push(`/login`)
     }
   }
 
@@ -51,7 +50,7 @@ export default function PageLayout({
     if (userContextData?.user === null) {
       handleUser();
     } else {
-      if (pathname === "/") {
+      if (pathname === "/" || pathname === "") {
         router.push(`/products`)
       }
     }
