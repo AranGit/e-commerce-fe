@@ -22,7 +22,6 @@ function ProductCard({ product }: { product: Product }) {
         title={product.title}
       />
       <CardContent className="product-card-content">
-
         <h5 className="ellipse-text">{product.title}</h5>
         <p className="ellipse-2-lines">{product.description}</p>
         <p className="text-[#EE4D2E] mt-3">฿{product.price}</p>

@@ -25,16 +25,21 @@ export default function PageLayout({
   const handleUser = () => {
     const token = getItemFromLocal(tokenKey);
     if (token) {
-      getUser({
-        token: token,
-        onSuccess: (user: User) => {
-          setUser(user);
-          router.push(`/products`)
-        },
-        onFailed: () => router.push(`/login`)
-      });
+      if (user === null) {
+        getUser({
+          token: token,
+          onSuccess: (user: User) => {
+            setUser(user);
+            if (pathname === '/login') {
+              router.push(`/products`)
+            }
+          },
+          onFailed: () => router.push(`/login`)
+        });
+      }
     } else {
       setUser(null);
+      router.push(`/login`)
     }
   }
 
@@ -54,7 +59,7 @@ export default function PageLayout({
         <NavBar />
       </header>
       <main className="flex flex-col items-center justify-between p-5 mt-[80px]">
-        <div className="max-w-[1400px]">{children}</div>
+        <div className="max-w-[1400px] w-full">{children}</div>
       </main>
       <footer></footer>
     </AuthProvider>

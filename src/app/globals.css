@@ -54,6 +54,11 @@ nav.MuiAppBar-root {
   background-color: #EE4D2E;
 }
 
+.MuiButton-contained.secondary-button {
+  background-color: #FFEEE8 !important;
+  color: #EE4D2E !important;
+}
+
 .MuiButton-contained:hover {
   background-color: #f05d40;
 }
@@ -76,4 +81,8 @@ nav.MuiAppBar-root {
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.carousel.carousel-slider {
+  max-height: 400px;
 }
