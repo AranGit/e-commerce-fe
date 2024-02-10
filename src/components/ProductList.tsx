@@ -49,7 +49,7 @@ function ProductList() {
                   id="combo-box-demo"
                   options={categories}
                   onChange={handleChange}
-                  renderInput={(params) => <TextField {...params} label="Select Catergory" />}
+                  renderInput={(params) => <TextField {...params} label="Select Catergories" />}
                 />
               </Grid>
             </Grid>
