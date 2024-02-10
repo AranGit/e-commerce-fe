@@ -78,6 +78,14 @@ nav.MuiAppBar-root {
   color: #EE4D2E !important;
 }
 
+.MuiFormControl-root.max-h-full .MuiInputBase-root {
+  max-height: 100%;
+}
+
+.MuiFormControl-root.max-h-full .MuiInputBase-root fieldset {
+  border: 0px solid;
+}
+
 .ellipse-text {
   white-space: nowrap;
   overflow: hidden;

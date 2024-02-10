@@ -65,9 +65,9 @@ function IndividualProduct({ product }: { product: Product }) {
             </Grid>
             <Grid className='py-10' item xs={12}>
               <span>Quantity </span>
-              <ButtonGroup className="mx-2" variant="contained" aria-label="Basic button group">
+              <ButtonGroup className="mx-2 h-[35px]" variant="contained" aria-label="Basic button group">
                 <Button onClick={() => handleQuantity(-1)}>-</Button>
-                <TextField className='w-[70px]' label="" variant="outlined" disabled value={quantity} />
+                <TextField className='w-[70px] max-h-full' label="" variant="outlined" disabled value={quantity} />
                 <Button onClick={() => handleQuantity(1)}>+</Button>
               </ButtonGroup>
               {product.stock} pieces available
