@@ -18,6 +18,7 @@ import Button from '@mui/material/Button';
 import { useRouter, usePathname } from 'next/navigation';
 import Badge from '@mui/material/Badge';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import { Carts, GetCartsOfUser } from '@/utils/apiUtils';
 
 const shopName = 'Aran (Dummy Shop)'
 
@@ -32,11 +33,19 @@ function NavBar(props: Props) {
   const pathname = usePathname();
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [userCarts, setUserCarts] = React.useState<Carts | null>(null);
   const userContextData = React.useContext(AuthContext);
 
   React.useEffect(() => {
-
-  }, [])
+    if (userContextData?.user) {
+      GetCartsOfUser(
+        {
+          userId: userContextData?.user.id,
+          onSuccess: (data: Carts) => setUserCarts(data),
+          onFailed: () => console.log("Failed")
+        })
+    }
+  }, [userContextData?.user])
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -73,7 +82,7 @@ function NavBar(props: Props) {
   );
 
   const badgeElement =
-    <Badge badgeContent={4} color="primary">
+    <Badge badgeContent={userCarts?.carts.length} color="primary">
       <ShoppingCartOutlinedIcon className='fill-white' />
     </Badge>
 

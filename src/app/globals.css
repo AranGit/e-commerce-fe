@@ -74,6 +74,10 @@ nav.MuiAppBar-root {
   color: #EE4D2E;
 }
 
+.Mui-checked {
+  color: #EE4D2E !important;
+}
+
 .ellipse-text {
   white-space: nowrap;
   overflow: hidden;
