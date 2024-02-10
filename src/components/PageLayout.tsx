@@ -58,7 +58,7 @@ export default function PageLayout({
       <header>
         <NavBar />
       </header>
-      <main className="flex flex-col items-center justify-between p-5 mt-[80px]">
+      <main className="flex flex-col items-center justify-between p-5 mt-[80px] mb-[36px]">
         <div className="max-w-[1400px] w-full">{children}</div>
       </main>
       <footer></footer>

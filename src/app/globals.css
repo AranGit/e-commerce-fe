@@ -69,6 +69,37 @@ nav.MuiAppBar-root {
   margin-right: 0px !important;
 }
 
+.MuiBadge-colorPrimary {
+  background-color: white !important;
+  color: #EE4D2E;
+}
+
+.Mui-checked {
+  color: #EE4D2E !important;
+}
+
+.MuiFormControl-root.max-h-full .MuiInputBase-root {
+  max-height: 100%;
+}
+
+.MuiFormControl-root.max-h-full .MuiInputBase-root input {
+  text-align: center;
+}
+
+.MuiFormControl-root.max-h-full .MuiInputBase-root fieldset {
+  border: 0px solid;
+}
+
+.snackbar-success .MuiSnackbarContent-root {
+  background-color: #EDF7ED;
+  color: rgb(30, 70, 32);
+}
+
+.snackbar-failed .MuiSnackbarContent-root {
+  background-color: rgb(253, 237, 237);
+  color: rgb(95, 33, 32);
+}
+
 .ellipse-text {
   white-space: nowrap;
   overflow: hidden;

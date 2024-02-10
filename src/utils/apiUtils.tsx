@@ -8,6 +8,9 @@ const getUserUrl = `${baseUrl}auth/me`;
 const getAllProductsUrl = `${baseUrl}products`;
 const getAllCatgoriesUrl = `${getAllProductsUrl}/categories`;
 const getProductByIdUrl = (productID: string) => `${baseUrl}products/${productID}`;
+//Cart
+const getCartsOfUserUrl = (userId: string) => `${baseUrl}carts/user/${userId}`;
+const addANewCartUrl = `${baseUrl}carts/add`;
 
 export interface ErrorResponse {
   message: string;
@@ -32,6 +35,12 @@ export interface Product {
   thumbnail: string;
   category: string,
   stock: number
+  quantity: number
+}
+
+export interface ProductToCart {
+  id: number;
+  quantity: number;
 }
 
 export interface Products {
@@ -40,6 +49,33 @@ export interface Products {
   skip: number;
   total: number;
 }
+
+export interface Cart {
+  id: number;
+  products: Product[];
+  total: number;
+  discountedTotal: number;
+  userId: number;
+  totalProducts: number;
+  totalQuantity: number
+}
+
+export interface Carts {
+  carts: Cart[];
+  total: number;
+  skip: number;
+  limit: number;
+}
+
+function mapToCarts(json: any): Carts {
+  return {
+    carts: json.carts,
+    total: json.total,
+    skip: json.skip,
+    limit: json.limit
+  };
+}
+
 
 function mapToError(json: any): ErrorResponse {
   return {
@@ -52,12 +88,13 @@ function mapToProduct(json: any): Product {
     id: json.id,
     title: json.title,
     price: json.price,
-    images: json.images,
+    images: json.images ? json.images : [],
     description: json.description,
     discountPercentage: json.discountPercentage,
     thumbnail: json.thumbnail,
     category: json.category,
-    stock: json.stock
+    stock: json.stock,
+    quantity: json.quantity ? json.quantity : 0
   };
 }
 
@@ -142,6 +179,48 @@ export const getUser = async (
   if (response.ok) {
     const jsonData = await response.json();
     onSuccess(mapToUser(jsonData));
+  } else {
+    const jsonData = await response.json();
+    onFailed(mapToError(jsonData));
+  }
+};
+
+export const GetCartsOfUser = async (
+  { userId, onSuccess, onFailed }:
+    {
+      userId: number,
+      onSuccess: any,
+      onFailed: any
+    }) => {
+  const response = await fetch(getCartsOfUserUrl(userId.toString()));
+  if (response.ok) {
+    const jsonData = await response.json();
+    onSuccess(mapToCarts(jsonData));
+  } else {
+    const jsonData = await response.json();
+    onFailed(mapToError(jsonData));
+  }
+};
+
+export const AddProductsToCart = async (
+  { productsToCart, userId, onSuccess, onFailed }:
+    {
+      productsToCart: ProductToCart[],
+      userId: number,
+      onSuccess: any,
+      onFailed: any
+    }) => {
+  const response = await fetch(addANewCartUrl,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId: userId,
+        products: productsToCart
+      })
+    });
+  if (response.ok) {
+    onSuccess();
   } else {
     const jsonData = await response.json();
     onFailed(mapToError(jsonData));

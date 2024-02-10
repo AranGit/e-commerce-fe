@@ -15,9 +15,12 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
+import Badge from '@mui/material/Badge';
+import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import { Carts, GetCartsOfUser } from '@/utils/apiUtils';
 
-const shopName = 'Phop Dummy Shop'
+const shopName = 'Aran (Dummy Shop)'
 
 interface Props {
   window?: () => Window;
@@ -25,18 +28,24 @@ interface Props {
 
 const drawerWidth = 240;
 
-const navItems = [
-  {
-    title: 'Log In',
-    url: "/login"
-  }
-];
-
 function NavBar(props: Props) {
   const router = useRouter();
+  const pathname = usePathname();
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [userCarts, setUserCarts] = React.useState<Carts | null>(null);
   const userContextData = React.useContext(AuthContext);
+
+  React.useEffect(() => {
+    if (userContextData?.user) {
+      GetCartsOfUser(
+        {
+          userId: userContextData?.user.id,
+          onSuccess: (data: Carts) => setUserCarts(data),
+          onFailed: () => console.log("Failed")
+        })
+    }
+  }, [userContextData?.user])
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -72,18 +81,27 @@ function NavBar(props: Props) {
     </Box>
   );
 
-  const container = window !== undefined ? () => window().document.body : undefined;
+  const badgeElement =
+    <Badge badgeContent={userCarts?.carts.length} color="primary">
+      <ShoppingCartOutlinedIcon className='fill-white' />
+    </Badge>
 
+  const container = window !== undefined ? () => window().document.body : undefined;
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <AppBar component="nav">
-        <Toolbar className='w-full max-w-[1400px] mx-[auto]'>
+        <Toolbar className={`w-full max-w-[1400px] mx-[auto] justify-between`}>
+          {
+            userContextData?.user && pathname !== '/cart' ?
+              <IconButton aria-label="cart" sx={{ mr: 2, display: { sm: 'none' } }} onClick={() => router.push("/cart")}>
+                {badgeElement}
+              </IconButton> : null
+          }
           <IconButton
-            className='left-[95%]'
             color="inherit"
             aria-label="open drawer"
-            edge="start"
+            edge="end"
             onClick={handleDrawerToggle}
             sx={{ mr: 2, display: { sm: 'none' } }}
           >
@@ -101,11 +119,21 @@ function NavBar(props: Props) {
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
             {
               userContextData?.user ?
-                <Button sx={{ color: '#fff' }} onClick={() => {
-                  onLogout();
-                }}>
-                  Log Out
-                </Button> :
+                <>
+                  {
+                    pathname !== '/cart' ?
+                      <IconButton aria-label="cart" className='mr-[20px]' onClick={() => router.push("/cart")}>
+                        {badgeElement}
+                      </IconButton>
+                      : null
+                  }
+                  <Button sx={{ color: '#fff' }} onClick={() => {
+                    onLogout();
+                  }}>
+                    Log Out
+                  </Button>
+                </>
+                :
                 <Button sx={{ color: '#fff' }} onClick={() => router.push("/login")}>
                   Log In
                 </Button>
@@ -131,7 +159,7 @@ function NavBar(props: Props) {
           {drawer}
         </Drawer>
       </nav>
-    </Box>
+    </Box >
   );
 }
 

@@ -1,22 +1,57 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
 "use client"
-import { Product } from '@/utils/apiUtils'
+import { AddProductsToCart, Product, ProductToCart } from '@/utils/apiUtils'
 import React from 'react'
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useRouter } from 'next/navigation';
+import { AuthContext } from "@/contexts/userContext";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import TextField from '@mui/material/TextField';
+import Snackbar from '@mui/material/Snackbar';
 
 function IndividualProduct({ product }: { product: Product }) {
+  const router = useRouter();
+  const userContextData = React.useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [quantity, setQuantity] = useState<number>(product.stock > 0 ? 1 : 0);
+  const [actionSuccess, setActionSuccess] = useState<boolean | null>(null);
 
   const handleQuantity = (value: number) => {
     const newQuantity = quantity + value
     setQuantity(newQuantity < 0 ? 0 : newQuantity >= product.stock ? product.stock : newQuantity);
+  }
+
+  const handleAddToCart = (nextActionUrl: string | null, productId: number) => {
+    if (userContextData?.user) {
+      setActionSuccess(null);
+      setIsLoading(true);
+      const productToCart: ProductToCart = {
+        id: productId,
+        quantity: quantity
+      }
+      AddProductsToCart({
+        productsToCart: [productToCart],
+        userId: userContextData?.user.id,
+        onSuccess: () => {
+          setIsLoading(false);
+          setActionSuccess(true);
+          if (nextActionUrl) {
+            router.push(nextActionUrl);
+          }
+        },
+        onFailed: () => {
+          setIsLoading(false);
+          setActionSuccess(false);
+        },
+      })
+    } else {
+      router.push('/login');
+    }
   }
 
   return (
@@ -50,19 +85,34 @@ function IndividualProduct({ product }: { product: Product }) {
               </div>
             </Grid>
             <Grid className='py-10' item xs={12}>
-              <span>Quantity </span>
-              <ButtonGroup className="mx-2" variant="contained" aria-label="Basic button group">
+              <p>Quantity </p>
+              <ButtonGroup className="my-2 h-[35px]" variant="contained" aria-label="Basic button group">
                 <Button onClick={() => handleQuantity(-1)}>-</Button>
-                <TextField className='w-[70px]' label="" variant="outlined" disabled value={quantity} />
+                <TextField className='w-[70px] max-h-full' label="" variant="outlined" disabled value={quantity} />
                 <Button onClick={() => handleQuantity(1)}>+</Button>
               </ButtonGroup>
-              {product.stock} pieces available
+              <p>{product.stock} pieces available</p>
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <Button className='secondary-button' variant="contained" fullWidth>Add To Cart</Button>
+              <Button
+                disabled={quantity <= 0 || isLoading}
+                className='secondary-button'
+                variant="contained"
+                fullWidth
+                onClick={() => handleAddToCart(null, product.id)}
+              >
+                Add To Cart
+              </Button>
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <Button variant="contained" fullWidth>By Now</Button>
+              <Button
+                disabled={quantity <= 0 || isLoading}
+                variant="contained"
+                fullWidth
+                onClick={() => handleAddToCart('/cart', product.id)}
+              >
+                By Now
+              </Button>
             </Grid>
           </Grid>
         </Grid>
@@ -92,6 +142,13 @@ function IndividualProduct({ product }: { product: Product }) {
           {product.description}
         </Grid>
       </Grid>
+      <Snackbar
+        className={actionSuccess === true ? `snackbar-success` : actionSuccess === false ? `snackbar-failed` : ""}
+        open={actionSuccess === true || actionSuccess === false}
+        autoHideDuration={3000}
+        onClose={() => setActionSuccess(null)}
+        message={actionSuccess === true ? `Added ${product.title} to cart` : actionSuccess === false ? `Failed to add` : ""}
+      />
     </>
   )
 }
