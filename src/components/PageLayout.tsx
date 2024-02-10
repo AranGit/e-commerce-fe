@@ -25,16 +25,21 @@ export default function PageLayout({
   const handleUser = () => {
     const token = getItemFromLocal(tokenKey);
     if (token) {
-      getUser({
-        token: token,
-        onSuccess: (user: User) => {
-          setUser(user);
-          router.push(`/products`)
-        },
-        onFailed: () => router.push(`/login`)
-      });
+      if (user === null) {
+        getUser({
+          token: token,
+          onSuccess: (user: User) => {
+            setUser(user);
+            if (pathname === '/login') {
+              router.push(`/products`)
+            }
+          },
+          onFailed: () => router.push(`/login`)
+        });
+      }
     } else {
       setUser(null);
+      router.push(`/login`)
     }
   }
 

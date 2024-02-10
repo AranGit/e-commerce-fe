@@ -69,7 +69,7 @@ function LoginCard() {
   };
 
   return (
-    <Grid className='card py-4' container>
+    <Grid className='card py-4 max-w-[600px] mx-auto' container>
       <Grid item xs={12} className='px-4'>
         <Box
           component="form"

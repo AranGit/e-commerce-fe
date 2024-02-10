@@ -90,9 +90,11 @@ function NavBar(props: Props) {
             <MenuIcon />
           </IconButton>
           <Typography
+            className='cursor-pointer'
             variant="h6"
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+            onClick={() => router.push("/products")}
           >
             {shopName}
           </Typography>
